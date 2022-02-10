@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/listFragment">
+
+    <fragment
+        android:id="@+id/listFragment"
+        android:name="com.example.contactprovider.view.conact_list.ContactListFragment"
+        android:label="ListFragment" >
+        <action
+            android:id="@+id/action_listFragment_to_contactAddFragment"
+            app:destination="@id/contactAddFragment"
+            app:enterAnim="@android:anim/slide_in_left"
+            app:exitAnim="@android:anim/slide_out_right"
+            app:popUpTo="@id/listFragment" />
+        <action
+            android:id="@+id/action_listFragment_to_contactDetailedFragment"
+            app:destination="@id/contactDetailedFragment"
+            app:enterAnim="@android:anim/slide_in_left"
+            app:exitAnim="@android:anim/slide_out_right"
+            app:popUpTo="@id/listFragment" />
+        <argument
+            android:name="detailed_name"
+            app:argType="string" />
+        <argument
+            android:name="detailed_email"
+            app:argType="string" />
+        <argument
+            android:name="detailed_phone"
+            app:argType="string" />
+    </fragment>
+    <fragment
+        android:id="@+id/contactAddFragment"
+        android:name="com.example.contactprovider.view.contact_add.ContactAddFragment"
+        android:label="ContactAddFragment" />
+    <fragment
+        android:id="@+id/contactDetailedFragment"
+        android:name="com.example.contactprovider.view.contact_detailed.ContactDetailedFragment"
+        android:label="ContactDetailedFragment" />
+</navigation>
