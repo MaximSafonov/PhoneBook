@@ -3,9 +3,9 @@ package com.example.contactprovider.data
 import android.content.ContentValues
 import android.content.Context
 import android.provider.ContactsContract
-import android.util.Log
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import timber.log.Timber
 import java.util.regex.Pattern
 
 class ContactAddRepository(private val context: Context) {
@@ -23,7 +23,7 @@ class ContactAddRepository(private val context: Context) {
 
     private fun saveRawContact(): Long {
         val uri = context.contentResolver.insert(ContactsContract.RawContacts.CONTENT_URI, ContentValues())
-        Log.d("saveRawContact", "uri = $uri")
+        Timber.d("saveRawContact uri = $uri")
         return uri?.lastPathSegment?.toLongOrNull() ?: error("cannot save raw contact")
     }
 

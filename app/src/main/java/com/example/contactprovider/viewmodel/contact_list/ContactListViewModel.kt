@@ -1,14 +1,18 @@
-package com.example.contactprovider.viewmodel
+package com.example.contactprovider.viewmodel.contact_list
 
 import android.app.Application
-import android.util.Log
 import androidx.lifecycle.*
 import com.example.contactprovider.data.Contact
 import com.example.contactprovider.data.ContactRepository
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import timber.log.Timber
 
 class ContactListViewModel(application: Application): AndroidViewModel(application) {
 
@@ -19,29 +23,28 @@ class ContactListViewModel(application: Application): AndroidViewModel(applicati
         return callMutableFlow
     }
 
-    private val contactsMutableFlow = MutableSharedFlow<List<Contact>>(replay = 1, extraBufferCapacity = 0, onBufferOverflow = BufferOverflow.SUSPEND)
-    fun contactsSharedFlow(): SharedFlow<List<Contact>> {
+    private val contactsMutableFlow = MutableStateFlow<List<Contact>>(emptyList())
+    fun contactsStateFlow(): StateFlow<List<Contact>> {
         return contactsMutableFlow
     }
 
     fun loadList() {
         viewModelScope.launch {
             try {
-                Log.d("ContactListViewModel loadList", "contact list added")
-                val list = repository.getAllContacts()
-                Log.d("ContactListViewModel loadList", "list from repo: ${list.toString()}")
-                contactsMutableFlow.emit(list)
+                withContext(Dispatchers.IO) {
+                    val list = repository.getAllContacts()
+                    Timber.d("ContactListViewModel loadList list from repo: $list")
+                    contactsMutableFlow.value = list
+                }
             } catch (t: Throwable) {
-                Log.e("ContactListViewModel loadList", "contact list error", t)
+                Timber.e("ContactListViewModel loadList contact list error", t)
                 contactsMutableFlow.emit(emptyList())
             }
         }
     }
 
     fun callToContact(contact: Contact) {
-        contact.phones.firstOrNull()?.let {
-            callMutableFlow.tryEmit(it)
-            Log.d("calltoCantact", "${callMutableFlow.tryEmit(it)} ")
-        }
+        contact.phones.firstOrNull()?.let { callMutableFlow.tryEmit(it) }
     }
+
 }

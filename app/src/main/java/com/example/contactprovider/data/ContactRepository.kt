@@ -4,9 +4,9 @@ import android.content.ContentUris
 import android.content.Context
 import android.database.Cursor
 import android.provider.ContactsContract
-import android.util.Log
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import timber.log.Timber
 
 class ContactRepository(
     private val context: Context
@@ -66,7 +66,7 @@ class ContactRepository(
 
         private suspend fun getEmailForContact(contactId: Long): List<String> =
         withContext(Dispatchers.IO) {
-        Log.d("getEmailForContact", "launched")
+        Timber.d("getEmailForContact launched")
             return@withContext context.contentResolver.query(
                 ContactsContract.CommonDataKinds.Email.CONTENT_URI,
                 null,
@@ -87,7 +87,7 @@ class ContactRepository(
             val emailAddress = cursor.getString(numberIndex).orEmpty()
             list.add(emailAddress)
         } while (cursor.moveToNext())
-        Log.d("getEmailsFromCursor", "launched")
+        Timber.d("getEmailsFromCursor launched")
             return@withContext list
     }
 

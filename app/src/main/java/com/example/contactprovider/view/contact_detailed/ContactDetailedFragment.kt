@@ -3,34 +3,21 @@ package com.example.contactprovider.view.contact_detailed
 import android.Manifest
 import android.content.pm.PackageManager
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import com.example.contactprovider.R
 import com.example.contactprovider.databinding.FragmentDetailedBinding
-import com.example.contactprovider.viewmodel.ContactDetailedViewModel
+import com.example.contactprovider.view.BaseFragment
+import com.example.contactprovider.viewmodel.contact_detailed.ContactDetailedViewModel
+import timber.log.Timber
 
-class ContactDetailedFragment: Fragment(R.layout.fragment_detailed) {
+class ContactDetailedFragment: BaseFragment<FragmentDetailedBinding>() {
 
     private val contactDetailedViewModel: ContactDetailedViewModel by viewModels()
-
-    private var _binding: FragmentDetailedBinding? = null
-    private val binding get() = _binding!!
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        _binding = FragmentDetailedBinding.inflate(inflater, container, false)
-        return binding.root
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -58,7 +45,7 @@ class ContactDetailedFragment: Fragment(R.layout.fragment_detailed) {
                     }
             }
         }
-        Log.d("ContactListDetailedFragment launched", "${arguments?.getString("KEY_NAME")}")
+        Timber.d("ContactListDetailedFragment launched ${arguments?.getString("KEY_NAME")}")
     }
 
     private fun showWriteContactsRationaleDialog() {
@@ -79,5 +66,12 @@ class ContactDetailedFragment: Fragment(R.layout.fragment_detailed) {
 
     companion object {
         private const val PERMISSION_REQUEST_CODE = 4321
+    }
+
+    override fun initBinding(
+        inflater: LayoutInflater,
+        container: ViewGroup?
+    ): FragmentDetailedBinding {
+        return FragmentDetailedBinding.inflate(inflater, container, false)
     }
 }

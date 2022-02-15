@@ -62,7 +62,6 @@ dependencies {
     //Navigation
     def navigationVersion = '2.4.0'
     implementation "androidx.navigation:navigation-fragment-ktx:$navigationVersion"
-    implementation "androidx.navigation:navigation-ui:$navigationVersion"
     implementation "androidx.navigation:navigation-ui-ktx:$navigationVersion"
 
     //Coroutines
@@ -70,4 +69,6 @@ dependencies {
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutinesVersion"
 
+    //Logging
+    implementation 'com.jakewharton.timber:timber:5.0.1'
 }

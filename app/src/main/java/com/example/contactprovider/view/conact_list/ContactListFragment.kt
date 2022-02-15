@@ -1,12 +1,10 @@
 package com.example.contactprovider.view.conact_list
 
 import android.Manifest
-import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,7 +12,6 @@ import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -24,64 +21,30 @@ import com.example.contactprovider.R
 import com.example.contactprovider.data.Contact
 import com.example.contactprovider.databinding.FragmentListBinding
 import com.example.contactprovider.utils.autoCleared
+import com.example.contactprovider.utils.launchWhenStarted
+import com.example.contactprovider.view.BaseFragment
 import com.example.contactprovider.view.conact_list.recycler_view.ContactListAdapter
-import com.example.contactprovider.viewmodel.ContactListViewModel
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import com.example.contactprovider.viewmodel.contact_list.ContactListViewModel
+import kotlinx.coroutines.flow.onEach
+import timber.log.Timber
 
-class ContactListFragment: Fragment(R.layout.fragment_list) {
+class ContactListFragment: BaseFragment<FragmentListBinding>() {
 
     private val viewModel by viewModels<ContactListViewModel>()
-
-    private var _binding: FragmentListBinding? = null
-    private val binding get() = _binding!!
-
     private var contactAdapter by autoCleared<ContactListAdapter>()
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        _binding = FragmentListBinding.inflate(inflater, container, false)
-        initList()
-        bindViewModel()
-        return binding.root
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        initList()
+        bindViewModel()
         binding.addButton.setOnClickListener {
             findNavController().navigate(ContactListFragmentDirections.actionListFragmentToContactAddFragment())
         }
-
-        lifecycleScope.launch {
-            withContext(Dispatchers.IO) {
-                when {
-                    ContextCompat.checkSelfPermission(
-                        requireContext(),
-                        Manifest.permission.READ_CONTACTS
-                    ) ==
-                            PackageManager.PERMISSION_GRANTED -> {
-                        viewModel.loadList()
-                    }
-                    shouldShowRequestPermissionRationale(Manifest.permission.READ_CONTACTS) -> {
-                        showWriteContactsRationaleDialog()
-                    }
-                    else -> {
-                        requestWriteContactsPermission()
-                    }
-                }
-            }
-        }
-        Log.d("ListFragment", "${contactAdapter.items}")
+        onLoadList()
     }
 
     private fun initList() {
-        Log.d("initlist", "lauched")
+        Timber.d("initList launched")
         contactAdapter = ContactListAdapter(viewModel::callToContact) { contact -> navigateToDetails(contact) }
         with(binding.contactList) {
             adapter = contactAdapter
@@ -89,30 +52,26 @@ class ContactListFragment: Fragment(R.layout.fragment_list) {
             setHasFixedSize(true)
             addItemDecoration(
                 DividerItemDecoration(
-                    requireContext(),
-                    DividerItemDecoration.VERTICAL
+                requireContext(),
+                DividerItemDecoration.VERTICAL
                 )
             )
         }
     }
 
     private fun bindViewModel() {
-        val contactListFlow = viewModel.contactsSharedFlow()
-        lifecycleScope.launch {
-            contactListFlow.collect { listContacts ->
-                contactAdapter.items = listContacts
-                Log.d("ListFragment bindviewmodel",
-                    "Launch when resumed ${contactAdapter.items}")
-            }
-        }
+        val contactListFlow = viewModel.contactsStateFlow()
+        contactListFlow.onEach { listContacts ->
+            contactAdapter.items = listContacts
+            Timber.d("ListFragment bindViewModel Launch when resumed ${contactAdapter.items}")
+        }.launchWhenStarted(lifecycleScope)
 
         val callFlow = viewModel.callSharedFlow()
-        lifecycleScope.launch {
-            callFlow.collect { phone ->
-                callToPhone(phone)
-                Log.d("ListFragment bindviewmodel", "Launch when resumed PHONE: $phone")
-            }
-        }
+        callFlow.onEach { phone ->
+            callToPhone(phone)
+            Timber.d("ListFragment bindViewModel Launch when resumed PHONE: $phone")
+        }.launchWhenStarted(lifecycleScope)
+
     }
 
     private fun callToPhone(phone: String) {
@@ -133,6 +92,18 @@ class ContactListFragment: Fragment(R.layout.fragment_list) {
         )
     }
 
+    private fun onLoadList() {
+        when {ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.READ_CONTACTS) ==
+                PackageManager.PERMISSION_GRANTED -> {
+            viewModel.loadList()
+            }
+            shouldShowRequestPermissionRationale(Manifest.permission.READ_CONTACTS) -> {
+                showWriteContactsRationaleDialog()
+            }
+            else -> { requestWriteContactsPermission() }
+        }
+    }
+
     private fun showWriteContactsRationaleDialog() {
         AlertDialog.Builder(requireContext())
             .setMessage("Необходимо разрешение для загрузки данных контактной книги")
@@ -151,5 +122,9 @@ class ContactListFragment: Fragment(R.layout.fragment_list) {
 
     companion object {
         private const val PERMISSION_REQUEST_CODE = 4321
+    }
+
+    override fun initBinding(inflater: LayoutInflater, container: ViewGroup?): FragmentListBinding {
+        return FragmentListBinding.inflate(inflater, container, false)
     }
 }

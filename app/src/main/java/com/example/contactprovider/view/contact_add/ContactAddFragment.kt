@@ -9,28 +9,15 @@ import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
-import com.example.contactprovider.R
 import com.example.contactprovider.databinding.FragmentAddBinding
-import com.example.contactprovider.viewmodel.ContactAddViewModel
+import com.example.contactprovider.view.BaseFragment
+import com.example.contactprovider.viewmodel.contact_add.ContactAddViewModel
 
-class ContactAddFragment: Fragment(R.layout.fragment_add) {
+class ContactAddFragment: BaseFragment<FragmentAddBinding>() {
 
     private val contactAddViewModel: ContactAddViewModel by viewModels()
-
-    private var _binding: FragmentAddBinding? = null
-    private val binding get() = _binding!!
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        _binding = FragmentAddBinding.inflate(inflater, container, false)
-        return binding.root
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -70,16 +57,15 @@ class ContactAddFragment: Fragment(R.layout.fragment_add) {
         ActivityCompat.requestPermissions(
             requireActivity(),
             arrayOf(Manifest.permission.WRITE_CONTACTS),
-            ContactAddFragment.PERMISSION_REQUEST_CODE
+            PERMISSION_REQUEST_CODE
         )
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
     }
 
     companion object {
         private const val PERMISSION_REQUEST_CODE = 4321
+    }
+
+    override fun initBinding(inflater: LayoutInflater, container: ViewGroup?): FragmentAddBinding {
+        return FragmentAddBinding.inflate(inflater, container, false)
     }
 }

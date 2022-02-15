@@ -2,6 +2,9 @@ package com.example.contactprovider.view.conact_list.recycler_view
 
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.Animation
+import android.view.animation.DecelerateInterpolator
+import android.view.animation.ScaleAnimation
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.contactprovider.R
@@ -39,14 +42,28 @@ class ContactAdapterDelegate(
         private var callButton = containerView.findViewById<FloatingActionButton>(R.id.callButton)
 
         init {
-            callButton.setOnClickListener { currentContact?.let(onContactToCallClick) }
-            containerView.setOnClickListener { currentContact?.let(onContactClick) }
+            callButton.setOnClickListener {
+                currentContact?.let(onContactToCallClick)
+                animate(it)
+            }
+            containerView.setOnClickListener {
+                currentContact?.let(onContactClick)
+                animate(it)
+            }
         }
 
         fun bind(contact: Contact) {
             currentContact = contact
             contactNameTextView.text = contact.name
             contactPhoneTextView.text = contact.phones.joinToString("\n")
+        }
+
+        private fun animate(view: View) {
+            val anim = ScaleAnimation(0F, 1F, 0F, 1F)
+            anim.duration = 500
+            anim.interpolator = DecelerateInterpolator()
+            anim.fillAfter = true
+            view.startAnimation(anim)
         }
     }
 }
