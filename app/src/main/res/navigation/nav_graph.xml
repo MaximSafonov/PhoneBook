@@ -6,7 +6,7 @@
 
     <fragment
         android:id="@+id/listFragment"
-        android:name="com.example.contactprovider.view.conact_list.ContactListFragment"
+        android:name="com.example.contactprovider.view.contact_list.ContactListFragment"
         android:label="ListFragment" >
         <action
             android:id="@+id/action_listFragment_to_contactAddFragment"

@@ -23,5 +23,4 @@ fun <T> Flow<T>.launchWhenStarted(lifecycleCoroutineScope: LifecycleCoroutineSco
     lifecycleCoroutineScope.launchWhenStarted {
         this@launchWhenStarted.collect()
     }
-
 }

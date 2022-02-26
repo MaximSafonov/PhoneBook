@@ -13,7 +13,6 @@ import androidx.fragment.app.viewModels
 import com.example.contactprovider.databinding.FragmentDetailedBinding
 import com.example.contactprovider.view.BaseFragment
 import com.example.contactprovider.viewmodel.contact_detailed.ContactDetailedViewModel
-import timber.log.Timber
 
 class ContactDetailedFragment: BaseFragment<FragmentDetailedBinding>() {
 
@@ -33,19 +32,18 @@ class ContactDetailedFragment: BaseFragment<FragmentDetailedBinding>() {
                     Manifest.permission.WRITE_CONTACTS
                 ) ==
                         PackageManager.PERMISSION_GRANTED -> {
-                            contactDetailedViewModel.deleteContact(
-                                arguments?.getLong("KEY_ID")?: 0
-                            )
-                    }
-                        shouldShowRequestPermissionRationale(
-                            Manifest.permission.WRITE_CONTACTS) -> {
-                            showWriteContactsRationaleDialog()
+                    contactDetailedViewModel.deleteContact(
+                        arguments?.getLong("KEY_ID")?: 0
+                    )
+                }
+                shouldShowRequestPermissionRationale(
+                    Manifest.permission.WRITE_CONTACTS) -> {
+                    showWriteContactsRationaleDialog()
                 } else -> {
-                            requestWriteContactsPermission()
-                    }
+                requestWriteContactsPermission()
+            }
             }
         }
-        Timber.d("ContactListDetailedFragment launched ${arguments?.getString("KEY_NAME")}")
     }
 
     private fun showWriteContactsRationaleDialog() {

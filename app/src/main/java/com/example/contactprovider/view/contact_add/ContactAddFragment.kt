@@ -10,6 +10,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.NavHostFragment.Companion.findNavController
 import androidx.navigation.fragment.findNavController
 import com.example.contactprovider.databinding.FragmentAddBinding
 import com.example.contactprovider.view.BaseFragment
@@ -40,7 +41,7 @@ class ContactAddFragment: BaseFragment<FragmentAddBinding>() {
                     showWriteContactsRationaleDialog()
                 } else -> {
                 requestWriteContactsPermission()
-                }
+            }
             }
         }
     }

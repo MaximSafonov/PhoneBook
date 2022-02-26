@@ -27,5 +27,9 @@ abstract class BaseFragment<B: ViewBinding>: Fragment() {
         super.onDestroy()
         _binding = null
     }
-
 }
+/*
+ *Пишешь вместо этой дичи binding: ItemContactBinding
+ * (если у тебя разметка айтема названа как item_contact.xml) и
+ * для view подаешь binding.root. Дальше избавишься от методов findViewById.
+ */

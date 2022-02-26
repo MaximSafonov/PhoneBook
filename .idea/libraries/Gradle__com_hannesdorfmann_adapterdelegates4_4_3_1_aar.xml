@@ -1,9 +1,10 @@
 <component name="libraryTable">
   <library name="Gradle: com.hannesdorfmann:adapterdelegates4:4.3.1@aar">
     <CLASSES>
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/d96fb29992f9883d6cbd3d251338da69/transformed/adapterdelegates4-4.3.1/jars/classes.jar!/" />
       <root url="file://$USER_HOME$/.gradle/caches/transforms-3/d96fb29992f9883d6cbd3d251338da69/transformed/adapterdelegates4-4.3.1/res" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/d96fb29992f9883d6cbd3d251338da69/transformed/adapterdelegates4-4.3.1/AndroidManifest.xml" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/2d3562ad969e1d01a2bdc96a835bc88b/transformed/adapterdelegates4-4.3.1/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/2d3562ad969e1d01a2bdc96a835bc88b/transformed/adapterdelegates4-4.3.1/AndroidManifest.xml" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/2d3562ad969e1d01a2bdc96a835bc88b/transformed/adapterdelegates4-4.3.1/res" />
     </CLASSES>
     <JAVADOC>
       <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.hannesdorfmann/adapterdelegates4/4.3.1/bcecc0df406588228e07b0ca9dddb485addb55ed/adapterdelegates4-4.3.1-javadoc.jar!/" />

@@ -1,4 +1,3 @@
 package com.example.contactprovider.data
 
-class IncorrectFormException: RuntimeException("incorrect form") {
-}
+class IncorrectFormException: RuntimeException("incorrect form")
